@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Fraunces } from "next/font/google";
 import { siteConfig, getSiteUrl } from "@/lib/site";
+import { PlausibleScript } from "@/components/analytics/Plausible";
+import { ClarityScript } from "@/components/analytics/Clarity";
 import "./globals.css";
 
 const sans = Inter({
@@ -46,10 +48,18 @@ export const metadata: Metadata = {
     follow: true,
     googleBot: { index: true, follow: true, "max-image-preview": "large" },
   },
-  verification: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION
-    ? { google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION }
-    : undefined,
+  verification: buildVerification(),
 };
+
+function buildVerification(): Metadata["verification"] {
+  const google = process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION;
+  const bing = process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION;
+  if (!google && !bing) return undefined;
+  return {
+    ...(google ? { google } : {}),
+    ...(bing ? { other: { "msvalidate.01": bing } } : {}),
+  };
+}
 
 export const viewport: Viewport = {
   themeColor: [
@@ -64,6 +74,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${sans.variable} ${display.variable}`}>
       <body className="bg-ink-50 text-ink-900 antialiased">{children}</body>
+      <PlausibleScript />
+      <ClarityScript />
     </html>
   );
 }
