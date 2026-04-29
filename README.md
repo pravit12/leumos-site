@@ -55,19 +55,84 @@ Robots.txt **only allows indexing when `VERCEL_ENV === "production"`**. Preview 
 ```
 src/
   app/
-    layout.tsx        # root layout, fonts, metadata, OG/Twitter
-    page.tsx          # placeholder home page + JSON-LD
-    sitemap.ts        # /sitemap.xml
-    robots.ts         # /robots.txt
-    icon.svg          # favicon
-    globals.css       # Tailwind base + minimal element resets
+    layout.tsx              # root layout, fonts, site-wide metadata, JSON-LD, header/footer
+    page.tsx                # placeholder home page
+    sitemap.ts              # /sitemap.xml — built from site.ts staticRoutes
+    robots.ts               # /robots.txt
+    opengraph-image.tsx     # default OG image (1200x630, edge-rendered via next/og)
+    twitter-image.tsx       # Twitter card variant (re-exports OG)
+    icon.svg                # favicon
+    globals.css             # Tailwind base + minimal element resets
+  components/
+    site-header.tsx         # <header> + <nav aria-label="Primary">
+    site-footer.tsx         # <footer> + <nav aria-label="Footer">
   lib/
-    site.ts           # site config + getSiteUrl()
+    site.ts                 # siteConfig, getSiteUrl(), absoluteUrl(), staticRoutes
+    seo.ts                  # buildPageMetadata({ title, description, path, ... })
+    structured-data.tsx     # JSON-LD helpers + <JsonLd> component
 .github/workflows/
-  ci.yml              # typecheck, lint, build, Lighthouse CI
-lighthouserc.json     # Lighthouse CI budgets (perf/SEO/a11y/BP ≥ 90)
-tailwind.config.ts    # token layer
+  ci.yml                    # typecheck, lint, build, Lighthouse CI
+lighthouserc.json           # Lighthouse CI budgets (perf/SEO/a11y/BP ≥ 90)
+tailwind.config.ts          # token layer
 ```
+
+## SEO baseline (LEU-3)
+
+Every page inherits a baseline of technical SEO. New pages should use the helpers below rather than wiring metadata by hand — that's how we keep the Lighthouse SEO score ≥ 95 site-wide.
+
+### `buildPageMetadata` — per-page `<title>`, `<meta>`, OG, Twitter, canonical
+
+```ts
+// src/app/about/page.tsx
+import { buildPageMetadata } from "@/lib/seo";
+
+export const metadata = buildPageMetadata({
+  title: "About Leumos",
+  description: "What we believe and who we're building for.",
+  path: "/about",
+});
+```
+
+Pass `ogImage` to override the default OG image, `noIndex: true` to keep a page out of search, and `keywords` if you really need them (rarely).
+
+### Site-wide JSON-LD
+
+`Organization` and `WebSite` (with a `SearchAction` stub) are mounted once in `src/app/layout.tsx`. Don't repeat them on individual pages — search engines de-duplicate by `@id`, but cleaner is better.
+
+### Page-level JSON-LD
+
+For per-page structured data, import the helpers from `src/lib/structured-data.tsx`:
+
+```tsx
+import { JsonLd, faqPageLd, breadcrumbListLd } from "@/lib/structured-data";
+
+<JsonLd
+  data={[
+    faqPageLd([
+      { question: "What is Leumos?", answer: "..." },
+    ]),
+    breadcrumbListLd([
+      { name: "Home", path: "/" },
+      { name: "FAQ", path: "/faq" },
+    ]),
+  ]}
+/>;
+```
+
+`faqPageLd` and `breadcrumbListLd` are the two reusable helpers we'll lean on most for the blog and resource pages. Add new helpers there rather than inlining JSON-LD.
+
+### Sitemap and robots
+
+- New routes get listed in `staticRoutes` in `src/lib/site.ts`. `src/app/sitemap.ts` consumes that list. When the blog lands, append the MDX-derived routes there too.
+- `src/app/robots.ts` allows crawling everywhere except on Vercel preview deploys (where it serves `Disallow: /` so previews don't get indexed). Both reference `${SITE_URL}/sitemap.xml`.
+
+### OG images
+
+`src/app/opengraph-image.tsx` is a `next/og` edge-rendered default that uses the brand gradient + `siteConfig` text. `twitter-image.tsx` re-exports it so the Twitter `summary_large_image` card matches. To override per route, drop a sibling `opengraph-image.tsx` and `twitter-image.tsx` into that route's folder — Next.js picks the closest one.
+
+### Semantic HTML
+
+The root layout renders `<header>`, `<main>` (via the page's own element), and `<footer>` landmarks, plus a "Skip to content" link that targets `#main-content`. Every `<main>` should keep `id="main-content"` and exactly one `<h1>` per page.
 
 ## Deployment
 

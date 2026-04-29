@@ -1,30 +1,18 @@
-import type { Metadata } from "next";
-import { siteConfig, getSiteUrl } from "@/lib/site";
+import { buildPageMetadata } from "@/lib/seo";
+import { siteConfig } from "@/lib/site";
 
-export const metadata: Metadata = {
+export const metadata = buildPageMetadata({
   title: `${siteConfig.name} — Coming soon`,
   description: siteConfig.description,
-};
+  path: "/",
+});
 
 export default function HomePage() {
-  const siteUrl = getSiteUrl();
-
-  const organizationLd = {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    name: siteConfig.name,
-    url: siteUrl,
-  };
-
-  const websiteLd = {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    name: siteConfig.name,
-    url: siteUrl,
-  };
-
   return (
-    <main className="mx-auto flex min-h-screen max-w-narrow flex-col justify-center px-6 py-24">
+    <main
+      id="main-content"
+      className="mx-auto flex w-full max-w-narrow flex-col justify-center px-6 py-24"
+    >
       <p className="mb-6 text-sm uppercase tracking-[0.2em] text-ink-400">
         Pre-launch
       </p>
@@ -35,18 +23,7 @@ export default function HomePage() {
         Something is being built here. Story, brand, and the full site are landing
         soon. Sign-up will live here when it&apos;s ready.
       </p>
-      <p className="mt-10 text-sm text-ink-400">
-        — Leumos AI
-      </p>
-
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationLd) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteLd) }}
-      />
+      <p className="mt-10 text-sm text-ink-400">— Leumos AI</p>
     </main>
   );
 }
