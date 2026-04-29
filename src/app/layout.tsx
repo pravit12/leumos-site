@@ -1,6 +1,9 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Fraunces } from "next/font/google";
-import { siteConfig, getSiteUrl } from "@/lib/site";
+import { SiteHeader } from "@/components/site-header";
+import { SiteFooter } from "@/components/site-footer";
+import { JsonLd, organizationLd, websiteLd } from "@/lib/structured-data";
+import { getSiteUrl, siteConfig } from "@/lib/site";
 import "./globals.css";
 
 const sans = Inter({
@@ -63,7 +66,18 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${sans.variable} ${display.variable}`}>
-      <body className="bg-ink-50 text-ink-900 antialiased">{children}</body>
+      <body className="flex min-h-screen flex-col bg-ink-50 text-ink-900 antialiased">
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-ink-900 focus:px-3 focus:py-2 focus:text-sm focus:text-ink-50"
+        >
+          Skip to content
+        </a>
+        <SiteHeader />
+        <div className="flex-1">{children}</div>
+        <SiteFooter />
+        <JsonLd data={[organizationLd(), websiteLd()]} />
+      </body>
     </html>
   );
 }
