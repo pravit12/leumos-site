@@ -85,3 +85,5 @@ See [`CONTRIBUTING.md`](./CONTRIBUTING.md) for commit-message and PR conventions
 
 - **Production**: https://leumos-site.vercel.app
 - Source: https://github.com/pravit12/leumos-site
+
+_(auto-preview link verified by PR #2)_
