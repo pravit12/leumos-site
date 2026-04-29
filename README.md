@@ -80,3 +80,8 @@ The Vercel project must have `NEXT_PUBLIC_SITE_URL` set to the production origin
 ## Conventions
 
 See [`CONTRIBUTING.md`](./CONTRIBUTING.md) for commit-message and PR conventions.
+
+## Live URLs
+
+- **Production**: https://leumos-site.vercel.app
+- Source: https://github.com/pravit12/leumos-site
