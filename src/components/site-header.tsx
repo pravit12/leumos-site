@@ -22,6 +22,14 @@ export function SiteHeader() {
                 Home
               </Link>
             </li>
+            <li>
+              <Link
+                href="/blog"
+                className="rounded-sm hover:text-ink-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lumos-500"
+              >
+                Blog
+              </Link>
+            </li>
           </ul>
         </nav>
       </div>

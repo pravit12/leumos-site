@@ -1,0 +1,81 @@
+---
+title: "Match shot color across cameras (3-frame method) — preview"
+slug: "match-shot-color-placeholder"
+description: "A placeholder of the upcoming cornerstone post on matching shot color across cameras with a repeatable three-frame method. The full guide lands when LEU-13 ships."
+publishedAt: "2026-04-29"
+heroImage: "/blog/match-shot-color/hero-placeholder.svg"
+heroImageAlt: "Three side-by-side film frames being graded to match"
+relatedSlugs: []
+keywords:
+  - "color matching"
+  - "DaVinci Resolve"
+  - "filmmaking"
+  - "post-production"
+ctaVariant: "filmmaking"
+draft: false
+---
+
+When you have footage from two different cameras in the same scene, the
+moment one frame cuts to the other can break the viewer out of the story.
+This guide walks through the **three-frame method**: a repeatable workflow
+for matching color across cameras without spending hours per shot.
+
+> Color matching is not creative grading. Get the cameras into the same
+> ballpark first; *then* grade the look on top. Swapping the order is the
+> single most common reason editors burn an afternoon on a shot they
+> should have nailed in fifteen minutes.
+
+## What you need before you start
+
+- Both cameras' RAW or log clips on the timeline
+- A reference frame from each camera shot under the same light
+- A color-correction tool that supports nodes or layers (DaVinci Resolve,
+  Premiere Lumetri, Final Cut Color Board — the workflow is identical)
+
+## The 3-frame method
+
+### 1. Pick the matching frame from each camera
+
+Find two frames — one from camera A and one from camera B — that capture
+the same scene and lighting. Skin tone is the cheat code: if a person
+walks past both cameras, that's your frame.
+
+### 2. Match the white point first, then the black point
+
+White and black are anchors. Match those before you touch anything else.
+Use the parade scope, not your eyes — your eyes lie after about 90
+seconds.
+
+### 3. Match the midtones with a single saturation push
+
+Once white and black agree, the midtones drift on their own. Push
+saturation up by 5–10% on the darker camera, and the two clips should
+read as the same world.
+
+## A worked example
+
+| Step    | What changed                | Tool          |
+| ------- | --------------------------- | ------------- |
+| Anchor  | White point lifted to 90 IRE | Curves       |
+| Anchor  | Black point set to 4 IRE     | Curves       |
+| Mid     | +6% saturation              | Color wheels  |
+
+Inline code looks like `node.serialNumber()` — and a code block looks
+like this:
+
+```ts
+function matchExposure(a: Frame, b: Frame): Adjustment {
+  const offset = b.luminance - a.luminance;
+  return { exposure: offset, contrast: 1.0, saturation: 1.0 };
+}
+```
+
+## Why this beats eyeballing it
+
+Eyeballing is fine when you have one shot. With twelve shots in a scene,
+the last one drifts because you've been staring at the first one for an
+hour. Anchoring to scopes is what scales.
+
+When the [LEU-13](/LEU/issues/LEU-13) cornerstone draft lands, this
+placeholder gets replaced with the full version. Until then, the page
+exists so we can verify the publishing surface end-to-end.

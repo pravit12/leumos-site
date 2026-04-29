@@ -23,3 +23,20 @@
     letter-spacing: -0.02em;
   }
 }
+
+@layer components {
+  .heading-anchor {
+    margin-left: 0.4rem;
+    color: theme(colors.ink.300);
+    opacity: 0;
+    transition: opacity 150ms ease;
+    text-decoration: none;
+    font-weight: 400;
+  }
+  h2:hover > .heading-anchor,
+  h3:hover > .heading-anchor,
+  .heading-anchor:focus-visible {
+    opacity: 1;
+    color: theme(colors.lumos.700);
+  }
+}

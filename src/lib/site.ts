@@ -18,6 +18,7 @@ export type StaticRoute = {
 
 export const staticRoutes: StaticRoute[] = [
   { path: "/", changeFrequency: "weekly", priority: 1 },
+  { path: "/blog", changeFrequency: "weekly", priority: 0.8 },
 ];
 
 export function getSiteUrl(): string {

@@ -67,6 +67,42 @@ export function breadcrumbListLd(entries: BreadcrumbEntry[]) {
   };
 }
 
+export type ArticleLdInput = {
+  title: string;
+  description: string;
+  path: string;
+  datePublished: string;
+  dateModified?: string;
+  authorName: string;
+  authorUrl?: string;
+  image?: string;
+  keywords?: string[];
+};
+
+export function articleLd(input: ArticleLdInput) {
+  const siteUrl = getSiteUrl();
+  const canonical = absoluteUrl(input.path);
+  return {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "@id": `${canonical}#article`,
+    headline: input.title,
+    description: input.description,
+    mainEntityOfPage: { "@type": "WebPage", "@id": canonical },
+    datePublished: input.datePublished,
+    dateModified: input.dateModified ?? input.datePublished,
+    author: {
+      "@type": "Organization",
+      name: input.authorName,
+      url: input.authorUrl ? absoluteUrl(input.authorUrl) : siteUrl,
+    },
+    publisher: { "@id": `${siteUrl}#organization` },
+    inLanguage: siteConfig.locale.replace("_", "-"),
+    ...(input.image ? { image: [input.image] } : {}),
+    ...(input.keywords && input.keywords.length > 0 ? { keywords: input.keywords.join(", ") } : {}),
+  };
+}
+
 export function JsonLd({ data }: { data: object | object[] }) {
   const payload = Array.isArray(data) ? data : [data];
   return (
