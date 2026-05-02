@@ -1,0 +1,22 @@
+---
+date: "2026-04-26"
+version: "0.2.0"
+title: "Analytics and SEO baseline"
+summary: "Privacy-first analytics, Microsoft Clarity heatmaps, and the search-engine verification + sitemap + robots baseline that any future page can rely on."
+tags: ["analytics", "seo"]
+---
+
+Two things had to be true before we shipped any real surface:
+
+1. We could measure traffic without dropping a cookie banner on visitors.
+2. Search engines could crawl, index, and link us correctly from the first page that lives at a real URL.
+
+What landed:
+
+- **Plausible** for privacy-first analytics — no cookies, no banner.
+- **Microsoft Clarity** for free session recordings and heatmaps, gated on `NEXT_PUBLIC_CLARITY_PROJECT_ID` so previews stay quiet.
+- **Google Search Console** and **Bing Webmaster Tools** verification through site-verification meta tags driven by env vars.
+- A `sitemap.xml` and `robots.txt` that disallow indexing on Vercel preview deploys and allow it everywhere else.
+- A canonical URL helper (`getSiteUrl`) so every page declares the same origin in metadata, OG tags, and structured data.
+
+This is plumbing, not a product. It's here so the next thing we ship can be measured and crawled the day it goes live.
