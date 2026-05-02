@@ -645,7 +645,7 @@ export default function StyleGuidePage() {
             <p className="tier-anchor" aria-label="Founding price compared to regular price">
               <span className="tier-anchor__founding">
                 $9
-                <span className="tier-anchor__period">founding · per month</span>
+                <span className="tier-anchor__period">founding/mo</span>
               </span>
               <span className="tier-anchor__regular">
                 <s aria-label="regular price">$14</s>

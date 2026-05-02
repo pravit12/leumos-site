@@ -130,7 +130,7 @@ const copy = {
     // register so urgency stays on price, not "join the waitlist".
     anchor: {
       foundingPrice: "$9",
-      foundingPeriod: "founding · per month",
+      foundingPeriod: "founding/mo",
       regularPrice: "$14",
       regularLabel: "regular price",
     },
