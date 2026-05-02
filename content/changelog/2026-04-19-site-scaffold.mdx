@@ -1,0 +1,18 @@
+---
+date: "2026-04-19"
+version: "0.1.0"
+title: "Marketing site scaffold"
+summary: "First commit of the Leumos AI marketing site — Next.js, Tailwind, and a Lighthouse CI baseline so every preview deploy holds the line on Core Web Vitals."
+tags: ["infrastructure"]
+---
+
+This is the first public note for the Leumos AI marketing site. It exists.
+
+What landed:
+
+- **Next.js 15 + App Router**, Tailwind CSS, and TypeScript on Vercel.
+- **Lighthouse CI** on every preview deploy with a 90+ floor across performance, accessibility, best-practices, and SEO.
+- **Security headers** wired in `next.config.ts`: `X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy`, and a tight `Permissions-Policy`.
+- A holding-page `/` so we can hand out a real URL while the story site is still being designed.
+
+There is no waitlist sign-up here yet — that ships with the brand and story work. This release is the floor we build on.
