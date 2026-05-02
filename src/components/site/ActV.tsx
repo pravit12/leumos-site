@@ -9,6 +9,17 @@ interface ActVProps {
   lede: string;
   ctaButton: string;
   microcopy: string;
+  /**
+   * Loss-Aversion anchor row (fomo-spec §3): founding price next to a real
+   * <s>regular price</s>. Strikethrough is the <s> element itself for SR support.
+   */
+  anchor: {
+    foundingPrice: string;
+    foundingPeriod?: string;
+    regularPrice: string;
+    regularLabel?: string;
+  };
+  /** Uncapped reassurance line. Sits with s-8 separation from the anchor row. */
   trust: string;
 }
 
@@ -18,6 +29,7 @@ export function ActV({
   lede,
   ctaButton,
   microcopy,
+  anchor,
   trust,
 }: ActVProps) {
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
@@ -41,6 +53,22 @@ export function ActV({
               {headline}
             </h2>
             <p className="act-5__lede">{lede}</p>
+            <div className="scarcity-stack act-5__pricing">
+              <p className="tier-anchor" aria-label="Founding price compared to regular price">
+                <span className="tier-anchor__founding">
+                  {anchor.foundingPrice}
+                  {anchor.foundingPeriod ? (
+                    <span className="tier-anchor__period">{anchor.foundingPeriod}</span>
+                  ) : null}
+                </span>
+                <span className="tier-anchor__regular">
+                  <s aria-label={anchor.regularLabel ?? "regular price"}>
+                    {anchor.regularPrice}
+                  </s>
+                </span>
+              </p>
+              <p className="tier-abundant">{trust}</p>
+            </div>
           </div>
           <form
             className="act-5__form"
@@ -62,7 +90,6 @@ export function ActV({
               </span>
             </Button>
             <p className="text-small act-5__microcopy">{microcopy}</p>
-            <p className="act-5__trust text-small">{trust}</p>
           </form>
         </aside>
       </div>

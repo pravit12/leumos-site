@@ -558,6 +558,117 @@ export default function StyleGuidePage() {
         </div>
       </Section>
 
+      <Section id="scarcity-hierarchy" title="Scarcity hierarchy (fomo-spec §3 · LEU-45)">
+        <p className="text-stage-300 mb-6 max-w-prose">
+          Three semantic registers so visual urgency lands on capped concepts
+          (founding price, 1,000-cap, founding badge) and stays off uncapped
+          concepts (the free waitlist seat). No new tokens — every reference is
+          to brand-system v1.
+        </p>
+
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+          <div className="rounded-lg border border-[var(--border-strong)] bg-stage-700 p-6">
+            <h3 className="mb-3 text-base">tier-scarce</h3>
+            <p className="text-stage-300 text-sm mb-4">
+              Eyebrow caps · mono numeral · 1px×24px leading rule. Pair with
+              the post-founding price for anchoring.
+            </p>
+            <p className="tier-scarce">
+              <span className="tier-scarce__num">823</span>
+              of 1,000 founding spots
+            </p>
+            <p className="tier-scarce tier-scarce--small mt-4">
+              <span className="tier-scarce__num">1,000</span>
+              founding spots
+            </p>
+            <p
+              className="tier-scarce mt-4"
+              data-state="critical"
+            >
+              <span className="tier-scarce__num">37</span>
+              of 1,000 left
+            </p>
+          </div>
+
+          <div className="rounded-lg border border-[var(--border-strong)] bg-stage-700 p-6">
+            <h3 className="mb-3 text-base">tier-abundant</h3>
+            <p className="text-stage-300 text-sm mb-4">
+              Body type · sentence case · text-muted · no rule, no numeral, no
+              eyebrow. Never adjacent to scarce without s-8 separation.
+            </p>
+            <p className="tier-abundant">free to join the waitlist</p>
+            <p className="tier-abundant tier-abundant--small mt-4">
+              free to join
+            </p>
+          </div>
+
+          <div className="rounded-lg border border-[var(--border-strong)] bg-stage-700 p-6">
+            <h3 className="mb-3 text-base">tier-anchor</h3>
+            <p className="text-stage-300 text-sm mb-4">
+              Loss-Aversion price comparison. Real <code>&lt;s&gt;</code> with
+              <code> aria-label=&quot;regular price&quot;</code> — never CSS
+              line-through on a span.
+            </p>
+            <p className="tier-anchor" aria-label="Founding price compared to regular price">
+              <span className="tier-anchor__founding">
+                $9
+                <span className="tier-anchor__period">/mo</span>
+              </span>
+              <span className="tier-anchor__regular">
+                <s aria-label="regular price">$14</s>
+              </span>
+            </p>
+          </div>
+        </div>
+
+        <h3 className="mt-12 mb-4 text-base">Composition: scarcity-row (hero secondary line)</h3>
+        <div className="rounded-lg border border-[var(--border-strong)] bg-stage-700 p-6">
+          <div className="scarcity-row" role="group" aria-label="Founding tier and waitlist terms">
+            <p className="tier-scarce">
+              <span className="tier-scarce__num">823</span>
+              of 1,000 founding spots
+            </p>
+            <span className="scarcity-row__sep" aria-hidden="true">·</span>
+            <p className="tier-abundant tier-abundant--small">
+              free to join the waitlist
+            </p>
+          </div>
+          <p className="text-stage-300 text-sm mt-3">
+            Desktop: inline, bullet between. Mobile (≤640px): stacks with s-8
+            separation; bullet hides.
+          </p>
+        </div>
+
+        <h3 className="mt-12 mb-4 text-base">Composition: scarcity-stack (Act V invitation)</h3>
+        <div className="rounded-lg border border-[var(--border-strong)] bg-stage-700 p-6">
+          <div className="scarcity-stack">
+            <p className="tier-anchor" aria-label="Founding price compared to regular price">
+              <span className="tier-anchor__founding">
+                $9
+                <span className="tier-anchor__period">founding · per month</span>
+              </span>
+              <span className="tier-anchor__regular">
+                <s aria-label="regular price">$14</s>
+              </span>
+            </p>
+            <p className="tier-abundant">
+              Free to join the waitlist. No card, no resellers, no bots.
+            </p>
+          </div>
+        </div>
+
+        <h3 className="mt-12 mb-4 text-base">Anti-cliché checklist (block in PR review)</h3>
+        <ul className="text-stage-300 text-sm space-y-1 list-disc pl-6">
+          <li>No &quot;Limited time only&quot; anywhere.</li>
+          <li>No &quot;Don&apos;t miss out&quot; anywhere.</li>
+          <li>No exclamation point on any scarce-tier element.</li>
+          <li>
+            Strikethrough is the <code>&lt;s&gt;</code> element only, in
+            <code> --text-muted</code>. Never red.
+          </li>
+        </ul>
+      </Section>
+
       <StickyMobileCTA
         microcopy="One email when it’s ready. Nothing else."
         action={

@@ -5,6 +5,155 @@ main {
   padding-bottom: 7rem;
 }
 
+/* ===== Scarcity copy hierarchy (LEU-45 / fomo-spec §3) =====
+   Three semantic registers so visual urgency lands on capped concepts only.
+
+   - .tier-scarce   — capped (founding price, 1,000-cap, founding badge).
+                      eyebrow caps · mono numeral · 1px×24px leading rule (signal-500).
+   - .tier-abundant — uncapped (free waitlist seat). Body, muted, no chrome.
+   - .tier-anchor   — Loss-Aversion price comparison. Real <s> strikethrough for SR. */
+
+.tier-scarce {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  font-family: var(--font-sans);
+  font-size: var(--type-eyebrow);
+  line-height: 1.2;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--signal-300);
+  margin: 0;
+}
+.tier-scarce::before {
+  content: "";
+  width: 24px;
+  height: 1px;
+  background: var(--signal-500);
+  flex: 0 0 24px;
+}
+.tier-scarce__num {
+  font-family: var(--font-mono);
+  font-size: var(--type-mono);
+  letter-spacing: 0.04em;
+  color: var(--signal-300);
+}
+.tier-scarce--critical .tier-scarce__num,
+.tier-scarce[data-state="critical"] .tier-scarce__num {
+  color: var(--signal-500);
+}
+.tier-scarce--small {
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  gap: var(--s-2);
+}
+.tier-scarce--small::before {
+  width: 16px;
+  flex-basis: 16px;
+}
+.tier-scarce--small .tier-scarce__num {
+  font-size: 12px;
+}
+/* No-rule modifier — used when two scarce-tier elements sit on one line and
+   only the first should carry the leading rule (e.g. sticky CTA microcopy). */
+.tier-scarce--norule::before {
+  display: none;
+}
+
+.tier-abundant {
+  font-family: var(--font-sans);
+  font-size: var(--type-body);
+  line-height: 1.55;
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+  color: var(--text-muted);
+  margin: 0;
+}
+.tier-abundant--small {
+  font-size: var(--type-small);
+}
+
+/* Anchor row — founding price next to a real <s>$14</s>. Baseline-aligned,
+   side-by-side at desktop, stacked on mobile. The strikethrough is on the
+   <s> element itself; do not add CSS line-through to a non-<s> tag. */
+.tier-anchor {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--s-4);
+  margin: 0;
+}
+@media (max-width: 480px) {
+  .tier-anchor {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--s-1);
+  }
+}
+.tier-anchor__founding {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--type-display);
+  line-height: 1;
+  letter-spacing: -0.025em;
+  color: var(--signal-300);
+}
+.tier-anchor__period {
+  font-family: var(--font-sans);
+  font-size: var(--type-body);
+  font-weight: 500;
+  color: var(--text-muted);
+  letter-spacing: 0.01em;
+  margin-left: var(--s-1);
+}
+.tier-anchor__regular {
+  font-family: var(--font-display);
+  font-size: var(--type-h3);
+  font-weight: 500;
+  color: var(--text-muted);
+  /* The <s> element supplies the line itself; no CSS text-decoration here. */
+  text-decoration: none;
+}
+
+/* Composition wrappers.
+
+   .scarcity-row   — inline (desktop): scarce · abundant on one line, bullet between.
+                     Mobile: stacks; bullet hidden; s-8 separation between registers.
+   .scarcity-stack — vertical (Act V, /pricing card body): s-8 separation. */
+
+.scarcity-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-3);
+  margin: 0;
+}
+.scarcity-row__sep {
+  color: var(--text-subtle);
+  font-size: 14px;
+  line-height: 1;
+  user-select: none;
+}
+@media (max-width: 640px) {
+  .scarcity-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--s-8);
+  }
+  .scarcity-row > .scarcity-row__sep {
+    display: none;
+  }
+}
+
+.scarcity-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-8);
+  margin: 0;
+}
+
 /* Skip link */
 .skip-link {
   position: fixed;
@@ -681,9 +830,8 @@ figcaption {
   margin: var(--s-2) 0 0;
   color: var(--text-muted);
 }
-.act-5__trust {
-  margin: 0;
-  color: var(--text-subtle);
+.act-5__pricing {
+  margin-top: var(--s-4);
 }
 
 /* ===== Footer ===== */

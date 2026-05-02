@@ -2,6 +2,7 @@
 
 import {
   type FormEvent,
+  type ReactNode,
   useCallback,
   useEffect,
   useRef,
@@ -17,7 +18,14 @@ interface HeroProps {
   lede: string;
   ctaLabel: string;
   microcopy: string;
-  trust: string;
+  /**
+   * Secondary line below the form. Two registers (fomo-spec §3):
+   * - `scarce` carries the capped concept (founding price / 1,000-cap counter).
+   *   Pass a ReactNode so LEU-43 can drop in <FoundingCounter variant="inline" />.
+   *   String is also accepted for the placeholder until the live counter ships.
+   * - `abundant` carries the uncapped concept ("free to join the waitlist").
+   */
+  trust: { scarce: ReactNode; abundant: ReactNode };
   formId?: string;
 }
 
@@ -158,7 +166,13 @@ export function Hero({
                   →
                 </span>
               </Button>
-              <p className="hero__trust text-small">{trust}</p>
+              <div className="hero__trust scarcity-row" role="group" aria-label="Founding tier and waitlist terms">
+                <p className="tier-scarce">{trust.scarce}</p>
+                <span className="scarcity-row__sep" aria-hidden="true">
+                  ·
+                </span>
+                <p className="tier-abundant tier-abundant--small">{trust.abundant}</p>
+              </div>
             </form>
           </div>
 
