@@ -1,6 +1,6 @@
 "use client";
 
-import type { FormEvent } from "react";
+import type { FormEvent, ReactNode } from "react";
 import { Button, EmailField } from "@/components/ui";
 
 interface ActVProps {
@@ -10,6 +10,11 @@ interface ActVProps {
   ctaButton: string;
   microcopy: string;
   trust: string;
+  /**
+   * Optional node pinned to the top-right corner of the CTA card.
+   * Used to render the FoundingCounter `pill` variant (LEU-43).
+   */
+  counterSlot?: ReactNode;
 }
 
 export function ActV({
@@ -19,6 +24,7 @@ export function ActV({
   ctaButton,
   microcopy,
   trust,
+  counterSlot,
 }: ActVProps) {
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -35,6 +41,9 @@ export function ActV({
           className="act-5__card"
           aria-labelledby="act-v-h"
         >
+          {counterSlot ? (
+            <div className="act-5__counter">{counterSlot}</div>
+          ) : null}
           <div className="act-5__copy">
             <p className="text-eyebrow">{eyebrow}</p>
             <h2 id="act-v-h" className="act-5__headline">

@@ -1,7 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { Button, StickyMobileCTA } from "@/components/ui";
+
+interface WaitlistStickyCTAProps {
+  /**
+   * Optional node placed to the left of the microcopy + action —
+   * the FoundingCounter `compact` variant drops in here (LEU-43).
+   */
+  leading?: ReactNode;
+}
 
 /**
  * Wraps StickyMobileCTA with a runtime listener that observes when any
@@ -10,7 +18,7 @@ import { Button, StickyMobileCTA } from "@/components/ui";
  * Also hides when a SuccessState is present (data-waitlist-success).
  * SuccessState wiring lives in LEU-4; this component just provides the contract.
  */
-export function WaitlistStickyCTA() {
+export function WaitlistStickyCTA({ leading }: WaitlistStickyCTAProps = {}) {
   const [hidden, setHidden] = useState(false);
 
   useEffect(() => {
@@ -60,6 +68,7 @@ export function WaitlistStickyCTA() {
   return (
     <StickyMobileCTA
       hidden={hidden}
+      leading={leading}
       microcopy="Cinematic color, AI-assisted. First 1,000 free."
       action={
         <Button size="md" pill onClick={onClick}>

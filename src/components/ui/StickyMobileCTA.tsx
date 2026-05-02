@@ -7,6 +7,11 @@ interface StickyMobileCTAProps {
   microcopy: ReactNode;
   /** Action node — typically a <Button> with an onClick that focuses the inline form. */
   action: ReactNode;
+  /**
+   * Optional node rendered to the left of the microcopy — used by LEU-43
+   * to drop in the FoundingCounter `compact` variant.
+   */
+  leading?: ReactNode;
   /** Visually hide on viewports above 900px. Default true. */
   mobileOnly?: boolean;
   /** Extra class names for the wrapper. */
@@ -18,6 +23,7 @@ interface StickyMobileCTAProps {
 export function StickyMobileCTA({
   microcopy,
   action,
+  leading,
   mobileOnly = true,
   className,
   hidden = false,
@@ -45,7 +51,10 @@ export function StickyMobileCTA({
       }}
     >
       <div className="mx-auto flex max-w-container items-center justify-between gap-4">
-        <p className="text-xs leading-tight text-stage-300">{microcopy}</p>
+        <div className="sticky-cta__counter-row">
+          {leading ? <div className="shrink-0">{leading}</div> : null}
+          <p className="text-xs leading-tight text-stage-300">{microcopy}</p>
+        </div>
         <div className="shrink-0">{action}</div>
       </div>
     </aside>

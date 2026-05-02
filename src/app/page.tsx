@@ -5,11 +5,25 @@ import {
   ActII,
   ActIV,
   ActV,
+  FoundingCounter,
   Footer,
   Hero,
   Nav,
   WaitlistStickyCTA,
 } from "@/components/site";
+
+type SearchParams = Record<string, string | string[] | undefined>;
+
+function pickSimulateRemaining(params: SearchParams): number | undefined {
+  // Dev/preview-only affordance for QA. The API route enforces the
+  // production-disabled check; here we just parse and forward.
+  const raw = params.simulateRemaining;
+  const value = Array.isArray(raw) ? raw[0] : raw;
+  if (typeof value !== "string") return undefined;
+  const n = Number.parseInt(value, 10);
+  if (!Number.isFinite(n) || n < 0 || n > 1000) return undefined;
+  return n;
+}
 
 type Stat = {
   numeral: string;
@@ -124,8 +138,40 @@ export const metadata: Metadata = {
   alternates: { canonical: "/" },
 };
 
-export default function HomePage() {
+export default async function HomePage({
+  searchParams,
+}: {
+  searchParams?: Promise<SearchParams>;
+}) {
   const siteUrl = getSiteUrl();
+  const params = (await searchParams) ?? {};
+  const simulateRemaining = pickSimulateRemaining(params);
+
+  const heroCounter = (
+    <div className="hero__counter-row">
+      <FoundingCounter variant="inline" simulateRemaining={simulateRemaining} />
+      <span className="hero__counter-row__sep" aria-hidden="true">
+        ·
+      </span>
+      <p className="hero__counter-row__abundant">free to join the waitlist</p>
+    </div>
+  );
+
+  const actVCounter = (
+    <FoundingCounter
+      variant="pill"
+      simulateRemaining={simulateRemaining}
+      quiet
+    />
+  );
+
+  const stickyCounter = (
+    <FoundingCounter
+      variant="compact"
+      simulateRemaining={simulateRemaining}
+      quiet
+    />
+  );
 
   const organizationLd = {
     "@context": "https://schema.org",
@@ -157,12 +203,13 @@ export default function HomePage() {
           ctaLabel={copy.hero.ctaLabel}
           microcopy={copy.hero.microcopy}
           trust={copy.hero.trust}
+          secondaryRow={heroCounter}
         />
         <ActIV {...copy.actIV} />
-        <ActV {...copy.actV} />
+        <ActV {...copy.actV} counterSlot={actVCounter} />
       </main>
       <Footer />
-      <WaitlistStickyCTA />
+      <WaitlistStickyCTA leading={stickyCounter} />
 
       <script
         type="application/ld+json"

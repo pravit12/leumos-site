@@ -2,6 +2,7 @@
 
 import {
   type FormEvent,
+  type ReactNode,
   useCallback,
   useEffect,
   useRef,
@@ -19,6 +20,11 @@ interface HeroProps {
   microcopy: string;
   trust: string;
   formId?: string;
+  /**
+   * Optional secondary-line node rendered between the headline and the lede.
+   * Used by the home page to inject the inline FoundingCounter (LEU-43).
+   */
+  secondaryRow?: ReactNode;
 }
 
 export function Hero({
@@ -29,6 +35,7 @@ export function Hero({
   microcopy,
   trust,
   formId = "waitlist-form",
+  secondaryRow,
 }: HeroProps) {
   const figureRef = useRef<HTMLElement | null>(null);
   const seamRef = useRef<HTMLDivElement | null>(null);
@@ -131,6 +138,7 @@ export function Hero({
               {headline.lead}{" "}
               <span className="text-pivot hero__pivot">{headline.pivot}</span>
             </h1>
+            {secondaryRow}
             <p className="hero__lede">{lede}</p>
 
             <form

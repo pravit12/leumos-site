@@ -627,6 +627,7 @@ figcaption {
 
 /* ===== Act V ===== */
 .act-5__card {
+  position: relative;
   background: linear-gradient(
     120deg,
     var(--stage-700),
@@ -788,4 +789,269 @@ figcaption {
 }
 .site-footer__bottom .text-small {
   color: var(--text-muted);
+}
+
+/* ===== FoundingCounter (LEU-43, fomo-spec §1) =====
+   Three form-factor variants share a single set of children.
+   No new tokens — every value resolves through brand-system v1. */
+.founding-counter {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  font-feature-settings: "tnum" 1, "lnum" 1;
+  position: relative;
+  /* Container fade-in on first paint */
+  opacity: 0;
+  animation: founding-counter-mount var(--dur-base) var(--ease-cinematic)
+    forwards;
+}
+.founding-counter__rule {
+  display: inline-block;
+  width: 0;
+  height: 1px;
+  background: var(--signal-500);
+  margin-right: var(--s-1);
+  animation: founding-counter-rule var(--dur-slow) var(--ease-cinematic)
+    forwards;
+}
+.founding-counter__numeral {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums lining-nums;
+  font-weight: 500;
+  color: var(--signal-300);
+  letter-spacing: -0.01em;
+  line-height: 1;
+}
+.founding-counter__divider,
+.founding-counter__total {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums lining-nums;
+  color: var(--text-muted);
+  line-height: 1;
+}
+.founding-counter__divider {
+  color: var(--text-subtle);
+  margin-inline: 1px;
+}
+.founding-counter__label {
+  font-size: var(--type-eyebrow);
+  line-height: 1.2;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+.founding-counter__post {
+  flex-basis: 100%;
+  margin: 0;
+  margin-top: var(--s-1);
+  font-size: var(--type-small);
+  color: var(--text-muted);
+  letter-spacing: normal;
+  text-transform: none;
+}
+
+/* ----- Variant: inline (Hero Act III secondary line) ----- */
+.founding-counter[data-variant="inline"] {
+  background: transparent;
+  border: 0;
+  padding: 0;
+  border-radius: 0;
+}
+.founding-counter[data-variant="inline"] .founding-counter__rule {
+  --rule-target: 24px;
+}
+.founding-counter[data-variant="inline"] .founding-counter__numeral {
+  font-size: 18px;
+}
+.founding-counter[data-variant="inline"] .founding-counter__divider,
+.founding-counter[data-variant="inline"] .founding-counter__total {
+  font-size: 14px;
+}
+
+/* ----- Variant: pill (Act V CTA card top-right, /pricing) ----- */
+.founding-counter[data-variant="pill"] {
+  background: rgba(22, 27, 38, 0.6); /* stage-700 @ 60% */
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-pill);
+  padding: var(--s-2) var(--s-4);
+}
+.founding-counter[data-variant="pill"] .founding-counter__rule {
+  --rule-target: 24px;
+}
+.founding-counter[data-variant="pill"] .founding-counter__numeral {
+  font-size: 28px;
+}
+.founding-counter[data-variant="pill"] .founding-counter__divider,
+.founding-counter[data-variant="pill"] .founding-counter__total {
+  font-size: 16px;
+}
+.founding-counter[data-variant="pill"] .founding-counter__label {
+  margin-left: var(--s-1);
+}
+
+/* ----- Variant: compact (Sticky mobile CTA, header nav critical-only) ----- */
+.founding-counter[data-variant="compact"] {
+  gap: var(--s-1);
+  background: transparent;
+  border: 0;
+  padding: 0;
+}
+.founding-counter[data-variant="compact"] .founding-counter__numeral {
+  font-size: 18px;
+}
+.founding-counter[data-variant="compact"] .founding-counter__divider,
+.founding-counter[data-variant="compact"] .founding-counter__total {
+  display: none; /* compact form drops the /1,000 — numeral + label only */
+}
+.founding-counter[data-variant="compact"] .founding-counter__label {
+  font-size: 11px;
+}
+
+/* ----- State: critical (remaining ≤ 100) ----- */
+.founding-counter[data-state="critical"] .founding-counter__numeral {
+  color: var(--signal-500);
+  font-weight: 600;
+  position: relative;
+  /* 1px underline pulse, once on mount, then settled */
+  animation: founding-counter-critical-pulse var(--dur-cinema)
+    var(--ease-cinematic) 1 forwards;
+}
+.founding-counter[data-state="critical"][data-variant="pill"] {
+  box-shadow: 0 0 0 4px rgba(255, 122, 26, 0.1);
+  animation: founding-counter-critical-glow var(--dur-cinema)
+    var(--ease-cinematic) 1 forwards;
+}
+
+/* ----- State: full (remaining = 0) ----- */
+.founding-counter[data-state="full"] .founding-counter__numeral {
+  color: var(--text-muted);
+  text-decoration: line-through;
+}
+.founding-counter[data-state="full"] .founding-counter__rule {
+  background: var(--text-subtle);
+}
+.founding-counter[data-state="full"][data-variant="pill"] {
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+
+/* ----- Stale signal ----- */
+.founding-counter[data-stale="true"] {
+  opacity: 0.85;
+}
+
+/* ----- Motion keyframes ----- */
+@keyframes founding-counter-mount {
+  to {
+    opacity: 1;
+  }
+}
+@keyframes founding-counter-rule {
+  to {
+    width: var(--rule-target, 24px);
+  }
+}
+@keyframes founding-counter-critical-pulse {
+  0% {
+    box-shadow: inset 0 -1px 0 0 transparent;
+  }
+  35% {
+    box-shadow: inset 0 -1px 0 0 var(--signal-500);
+  }
+  100% {
+    box-shadow: inset 0 -1px 0 0 transparent;
+  }
+}
+@keyframes founding-counter-critical-glow {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 122, 26, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 4px rgba(255, 122, 26, 0.1);
+  }
+}
+
+/* ----- Reduced-motion: collapse decorative motion to opacity-only ----- */
+@media (prefers-reduced-motion: reduce) {
+  .founding-counter,
+  .founding-counter[data-state="critical"] .founding-counter__numeral,
+  .founding-counter[data-state="critical"][data-variant="pill"] {
+    animation-duration: 80ms;
+    animation-timing-function: linear;
+  }
+  .founding-counter__rule {
+    width: var(--rule-target, 24px);
+    animation: none;
+  }
+  .founding-counter[data-state="critical"] .founding-counter__numeral {
+    animation: none;
+  }
+  .founding-counter[data-state="critical"][data-variant="pill"] {
+    animation: none;
+    box-shadow: 0 0 0 4px rgba(255, 122, 26, 0.1);
+  }
+}
+
+/* ----- Hero secondary-line composition (inline counter + abundant register) ----- */
+.hero__counter-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-3);
+  margin: 0;
+}
+.hero__counter-row .founding-counter {
+  flex-shrink: 0;
+}
+.hero__counter-row__abundant {
+  font-size: var(--type-body);
+  color: var(--text-muted);
+  margin: 0;
+}
+.hero__counter-row__sep {
+  color: var(--text-subtle);
+  font-size: 14px;
+  margin: 0 calc(-1 * var(--s-1));
+}
+@media (max-width: 640px) {
+  .hero__counter-row__sep {
+    display: none;
+  }
+  .hero__counter-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--s-2);
+  }
+}
+
+/* ----- Act V CTA card: pin counter to top-right of card ----- */
+.act-5__counter {
+  position: absolute;
+  top: var(--s-4);
+  right: var(--s-4);
+  z-index: 2;
+}
+@media (max-width: 640px) {
+  .act-5__counter {
+    position: static;
+    margin-bottom: var(--s-4);
+    align-self: flex-start;
+  }
+}
+
+/* ----- Sticky CTA: counter sits left of microcopy + button ----- */
+.sticky-cta__counter-row {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  flex: 1;
+  min-width: 0;
+}
+.sticky-cta__counter-row .founding-counter {
+  flex-shrink: 0;
+}
+.sticky-cta__counter-row > p {
+  flex: 1;
+  min-width: 0;
 }

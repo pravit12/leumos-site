@@ -14,3 +14,6 @@ export { ActI } from "./ActI";
 export { ActII } from "./ActII";
 export { ActIV } from "./ActIV";
 export { ActV } from "./ActV";
+
+export { FoundingCounter } from "./FoundingCounter";
+export type { FoundingCounterVariant } from "./FoundingCounter";
