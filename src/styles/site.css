@@ -310,10 +310,6 @@ figcaption {
 .hero__email-field {
   flex: 1;
 }
-.hero__trust {
-  margin: 0;
-  color: var(--text-muted);
-}
 
 /* Hero before/after frame */
 .hero__frame {
@@ -637,17 +633,26 @@ figcaption {
   padding: var(--s-8);
   display: flex;
   flex-direction: column;
-  gap: var(--s-8);
+  gap: var(--s-6);
   box-shadow: var(--shadow-md), 0 0 80px -16px rgba(255, 122, 26, 0.3);
 }
 @media (min-width: 1024px) {
   .act-5__card {
-    flex-direction: row;
-    align-items: stretch;
     padding: var(--s-12) var(--s-16);
-    gap: var(--s-16);
     max-width: 880px;
     margin: 0 auto;
+  }
+}
+.act-5__top {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-8);
+}
+@media (min-width: 1024px) {
+  .act-5__top {
+    flex-direction: row;
+    align-items: stretch;
+    gap: var(--s-16);
   }
 }
 .act-5__copy {
@@ -680,10 +685,6 @@ figcaption {
 .act-5__microcopy {
   margin: var(--s-2) 0 0;
   color: var(--text-muted);
-}
-.act-5__trust {
-  margin: 0;
-  color: var(--text-subtle);
 }
 
 /* ===== Footer ===== */
@@ -788,4 +789,215 @@ figcaption {
 }
 .site-footer__bottom .text-small {
   color: var(--text-muted);
+}
+
+/* ===== Social proof block (LEU-44) =====
+   3 stacked initials avatars + overflow chip + 7-day count line.
+   Honest data only — never renders synthetic counts (component guards). */
+.social-proof {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+  margin: 0;
+  padding: 0;
+}
+.social-proof__avatars {
+  display: flex;
+  align-items: center;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.social-proof__avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 1.5px solid var(--bg);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0;
+  color: var(--stage-900);
+  margin-left: -8px;
+  /* Initial cascade-in for sighted users; reduced-motion override below. */
+  opacity: 0;
+  transform: translateY(2px);
+  animation: socialProofAvatarIn var(--dur-base) var(--ease-standard) forwards;
+}
+.social-proof__avatar:first-child {
+  margin-left: 0;
+}
+.social-proof__avatar:nth-child(2) {
+  animation-delay: 60ms;
+}
+.social-proof__avatar:nth-child(3) {
+  animation-delay: 120ms;
+}
+.social-proof__avatar:nth-child(4) {
+  animation-delay: 180ms;
+}
+.social-proof__avatar-text {
+  /* Letters are decorative — region label provides meaningful context. */
+  display: inline-block;
+  line-height: 1;
+}
+.social-proof__overflow {
+  background: var(--surface) !important;
+  color: var(--text);
+  border-color: var(--border-strong);
+}
+.social-proof__overflow .social-proof__avatar-text {
+  font-weight: 600;
+}
+.social-proof__line {
+  margin: 0;
+  font-size: var(--type-small);
+  color: var(--text-muted);
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--s-2);
+  flex-wrap: wrap;
+}
+.social-proof__count {
+  font-family: var(--font-mono);
+  font-size: 18px;
+  color: var(--signal-300);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+.social-proof__label {
+  color: var(--text-muted);
+}
+.social-proof__quote {
+  margin: var(--s-2) 0 0;
+  padding: var(--s-3) 0 0;
+  border-top: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+}
+.social-proof__quote-body {
+  margin: 0;
+  font-size: var(--type-small);
+  color: var(--text);
+  line-height: 1.5;
+}
+.social-proof__quote-attr {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+.social-proof__quote-name {
+  color: var(--text);
+  font-weight: 500;
+}
+.social-proof--compact {
+  gap: var(--s-2);
+  padding-top: var(--s-3);
+  margin-top: var(--s-3);
+  border-top: 1px solid var(--border);
+}
+.social-proof--compact .social-proof__count {
+  font-size: 16px;
+}
+@keyframes socialProofAvatarIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .social-proof__avatar {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Hero + Act V wrappers around the block keep spacing local. */
+.hero__social-proof {
+  margin-top: var(--s-4);
+  max-width: 520px;
+}
+.act-5__social-proof {
+  margin-top: var(--s-4);
+}
+
+/* ===== Waitlist opt-in checkbox (LEU-44) =====
+   Optional. Default OFF. Surfaces on every waitlist form so users can
+   choose to be visible on the public waitlist by first name only. */
+.waitlist-optin {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--s-3);
+  align-items: start;
+  cursor: pointer;
+  font-size: var(--type-small);
+  line-height: 1.45;
+  color: var(--text-muted);
+  margin: 0;
+  padding: var(--s-2) 0 0;
+}
+.waitlist-optin__input {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: var(--r-xs);
+  border: 1.5px solid var(--border-strong);
+  background: var(--surface);
+  cursor: pointer;
+  margin-top: 2px; /* baseline align with first text line */
+  transition:
+    border-color var(--dur-fast) var(--ease-standard),
+    background-color var(--dur-fast) var(--ease-standard);
+  position: relative;
+}
+.waitlist-optin__input:hover {
+  border-color: var(--signal-300);
+}
+.waitlist-optin__input:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+.waitlist-optin__input:checked {
+  background: var(--signal-500);
+  border-color: var(--signal-500);
+}
+.waitlist-optin__input:checked::after {
+  content: "";
+  position: absolute;
+  inset: 2px;
+  background-image: linear-gradient(
+      45deg,
+      transparent 45%,
+      var(--stage-900) 45%,
+      var(--stage-900) 55%,
+      transparent 55%
+    ),
+    linear-gradient(
+      -45deg,
+      transparent 45%,
+      var(--stage-900) 45%,
+      var(--stage-900) 55%,
+      transparent 55%
+    );
+  background-size: 60% 2px, 60% 2px;
+  background-position: 0% 65%, 100% 65%;
+  background-repeat: no-repeat;
+}
+.waitlist-optin__copy {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.waitlist-optin__label {
+  color: var(--text);
+  font-weight: 500;
+}
+.waitlist-optin__help {
+  color: var(--text-muted);
+  font-size: 13px;
+  line-height: 1.4;
 }

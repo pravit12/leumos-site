@@ -9,6 +9,7 @@ export { Nav } from "./Nav";
 export { Hero } from "./Hero";
 export { Footer } from "./Footer";
 export { WaitlistStickyCTA } from "./WaitlistStickyCTA";
+export { SocialProofBlock } from "./SocialProofBlock";
 
 export { ActI } from "./ActI";
 export { ActII } from "./ActII";

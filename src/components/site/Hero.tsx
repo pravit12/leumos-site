@@ -7,8 +7,9 @@ import {
   useRef,
   useState,
 } from "react";
-import { Button, EmailField } from "@/components/ui";
+import { Button, EmailField, WaitlistOptInCheckbox } from "@/components/ui";
 import { KnotMark } from "./KnotMark";
+import { SocialProofBlock } from "./SocialProofBlock";
 
 interface HeroProps {
   eyebrow: string;
@@ -17,7 +18,6 @@ interface HeroProps {
   lede: string;
   ctaLabel: string;
   microcopy: string;
-  trust: string;
   formId?: string;
 }
 
@@ -27,7 +27,6 @@ export function Hero({
   lede,
   ctaLabel,
   microcopy,
-  trust,
   formId = "waitlist-form",
 }: HeroProps) {
   const figureRef = useRef<HTMLElement | null>(null);
@@ -158,8 +157,9 @@ export function Hero({
                   →
                 </span>
               </Button>
-              <p className="hero__trust text-small">{trust}</p>
+              <WaitlistOptInCheckbox className="hero__optin" />
             </form>
+            <SocialProofBlock className="hero__social-proof" />
           </div>
 
           <figure

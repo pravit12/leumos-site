@@ -29,7 +29,6 @@ const copy = {
     lede: "Upload your footage. We detect the cuts, match the look, balance the shots. You finish the frame.",
     ctaLabel: "Get on the waitlist",
     microcopy: "One email when it's ready. Nothing else.",
-    trust: "First 1,000 sign-ups get the founding-member tier. No card. No spam.",
   },
   actI: {
     eyebrow: "Act I — The world today",
@@ -113,8 +112,6 @@ const copy = {
       "When we open the doors, the first 1,000 sign-ups keep the Creator tier free, forever. After that we'll be billing — and you'll have already been grading.",
     ctaButton: "Get on the waitlist",
     microcopy: "Honest. One email when it's ready.",
-    trust:
-      "Joining: indie editors, wedding studios, social-agency colorists. No bots, no resellers.",
   },
 };
 
@@ -156,7 +153,6 @@ export default function HomePage() {
           lede={copy.hero.lede}
           ctaLabel={copy.hero.ctaLabel}
           microcopy={copy.hero.microcopy}
-          trust={copy.hero.trust}
         />
         <ActIV {...copy.actIV} />
         <ActV {...copy.actV} />
