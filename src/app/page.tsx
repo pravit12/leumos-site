@@ -29,7 +29,18 @@ const copy = {
     lede: "Upload your footage. We detect the cuts, match the look, balance the shots. You finish the frame.",
     ctaLabel: "Get on the waitlist",
     microcopy: "One email when it's ready. Nothing else.",
-    trust: "First 1,000 sign-ups get the founding-member tier. No card. No spam.",
+    // fomo-spec §3 — two registers. LEU-43 will replace `scarce` with
+    // <FoundingCounter variant="inline" /> once the live count API is live;
+    // the static placeholder keeps the visual hierarchy correct in the meantime.
+    trust: {
+      scarce: (
+        <>
+          <span className="tier-scarce__num">1,000</span>
+          founding spots
+        </>
+      ),
+      abundant: "free to join the waitlist",
+    },
   },
   actI: {
     eyebrow: "Act I — The world today",
@@ -113,8 +124,17 @@ const copy = {
       "When we open the doors, the first 1,000 sign-ups keep the Creator tier free, forever. After that we'll be billing — and you'll have already been grading.",
     ctaButton: "Get on the waitlist",
     microcopy: "Honest. One email when it's ready.",
-    trust:
-      "Joining: indie editors, wedding studios, social-agency colorists. No bots, no resellers.",
+    // fomo-spec §3 — Loss-Aversion anchor row. Founding price flanked by a
+    // real <s>regular price</s> for screen-reader anchoring. Source-of-truth
+    // numbers come from pricing-v1 on LEU-16. The trust line is the abundant
+    // register so urgency stays on price, not "join the waitlist".
+    anchor: {
+      foundingPrice: "$9",
+      foundingPeriod: "founding · per month",
+      regularPrice: "$14",
+      regularLabel: "regular price",
+    },
+    trust: "Free to join the waitlist. No card, no resellers, no bots.",
   },
 };
 

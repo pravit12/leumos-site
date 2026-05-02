@@ -60,7 +60,26 @@ export function WaitlistStickyCTA() {
   return (
     <StickyMobileCTA
       hidden={hidden}
-      microcopy="Cinematic color, AI-assisted. First 1,000 free."
+      microcopy={
+        // fomo-spec §3 — sticky-CTA microcopy is two scarce-tier registers:
+        // [counter compact] · [scarce-small] founding price locked.
+        // Wrapped in .scarcity-row so the ≤640px breakpoint hides the bullet
+        // and stacks the two registers when they wrap beside the Join button.
+        // Until LEU-43 ships the live counter, the first element is a static
+        // placeholder using the same compact treatment.
+        <span className="scarcity-row">
+          <span className="tier-scarce tier-scarce--small">
+            <span className="tier-scarce__num">1,000</span>
+            founding spots
+          </span>
+          <span className="scarcity-row__sep" aria-hidden="true">
+            ·
+          </span>
+          <span className="tier-scarce tier-scarce--small tier-scarce--norule">
+            founding price locked
+          </span>
+        </span>
+      }
       action={
         <Button size="md" pill onClick={onClick}>
           Join →
