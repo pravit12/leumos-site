@@ -1,9 +1,9 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Fraunces } from "next/font/google";
+import { Geist, Fraunces, Geist_Mono } from "next/font/google";
 import { siteConfig, getSiteUrl } from "@/lib/site";
 import "./globals.css";
 
-const sans = Inter({
+const sans = Geist({
   subsets: ["latin"],
   variable: "--font-sans",
   display: "swap",
@@ -13,7 +13,14 @@ const display = Fraunces({
   subsets: ["latin"],
   variable: "--font-display",
   display: "swap",
-  weight: ["400", "600", "700"],
+  weight: ["400", "500", "600"],
+  style: ["normal", "italic"],
+});
+
+const mono = Geist_Mono({
+  subsets: ["latin"],
+  variable: "--font-mono",
+  display: "swap",
 });
 
 const siteUrl = getSiteUrl();
@@ -52,18 +59,18 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#fffaeb" },
-    { media: "(prefers-color-scheme: dark)", color: "#0b0d14" },
-  ],
+  themeColor: "#0D1119",
   width: "device-width",
   initialScale: 1,
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${sans.variable} ${display.variable}`}>
-      <body className="bg-ink-50 text-ink-900 antialiased">{children}</body>
+    <html
+      lang="en"
+      className={`${sans.variable} ${display.variable} ${mono.variable}`}
+    >
+      <body className="bg-stage-800 text-stage-50 antialiased">{children}</body>
     </html>
   );
 }

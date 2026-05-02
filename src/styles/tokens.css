@@ -1,0 +1,133 @@
+/* Leumos brand tokens — single source of CSS custom properties.
+   Mirror of brand-system v1 §11. Components reference these aliases;
+   raw scales (lume / stage / signal / cine / hot) live in tailwind.config.ts. */
+
+:root {
+  /* Brand spectrum */
+  --lume-blue: #1F4DFF;
+  --lume-violet: #6B2BD9;
+  --lume-magenta: #D6238C;
+  --lume-orange: #FF7A1A;
+
+  /* Stage neutrals */
+  --stage-50: #F5F6F8;
+  --stage-100: #E8EBF0;
+  --stage-200: #C9CFD9;
+  --stage-300: #97A0AF;
+  --stage-400: #5F6878;
+  --stage-500: #3A4150;
+  --stage-600: #252B38;
+  --stage-700: #161B26;
+  --stage-800: #0D1119;
+  --stage-900: #07090F;
+
+  /* Signal — primary action */
+  --signal-50: #FFF1E6;
+  --signal-100: #FFD9B8;
+  --signal-300: #FFA866;
+  --signal-500: #FF7A1A;
+  --signal-600: #DB5F0A;
+  --signal-700: #A1410A;
+  --signal-900: #5C2407;
+
+  /* Cine — link / accent teal */
+  --cine-100: #C8F0F7;
+  --cine-300: #5FCDE0;
+  --cine-500: #1AA3BD;
+  --cine-700: #0E5F73;
+
+  /* Hot — magenta accent */
+  --hot-300: #F06DBA;
+  --hot-500: #D6238C;
+  --hot-700: #861C5C;
+
+  /* Brand canonical gradient */
+  --brand-gradient: linear-gradient(
+    105deg,
+    #1F4DFF 0%,
+    #6B2BD9 38%,
+    #D6238C 65%,
+    #FF7A1A 100%
+  );
+  --pivot-gradient: linear-gradient(
+    100deg,
+    var(--signal-300) 0%,
+    var(--hot-500) 55%,
+    var(--lume-violet) 100%
+  );
+
+  /* Semantic aliases (use these in components) */
+  --bg: var(--stage-800);
+  --surface: var(--stage-700);
+  --surface-2: var(--stage-600);
+  --text: var(--stage-50);
+  --text-muted: var(--stage-300);
+  --text-subtle: var(--stage-400);
+  --border: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.16);
+  --link: var(--cine-300);
+  --link-hover: var(--cine-100);
+  --focus-ring: var(--signal-300);
+  --cta-fill: var(--signal-500);
+  --cta-fill-active: var(--signal-600);
+  --cta-text: var(--stage-900);
+
+  /* Type scale (see §2.2) */
+  --type-display: clamp(2.75rem, 1.6rem + 4.6vw, 4.5rem);
+  --type-h1: clamp(2.25rem, 1.5rem + 3vw, 3.5rem);
+  --type-h2: clamp(1.75rem, 1.3rem + 1.8vw, 2.5rem);
+  --type-h3: clamp(1.5rem, 1.35rem + 0.5vw, 1.75rem);
+  --type-h4: clamp(1.125rem, 1.05rem + 0.25vw, 1.25rem);
+  --type-lede: clamp(1.0625rem, 0.95rem + 0.5vw, 1.25rem);
+  --type-body: 1.0625rem; /* 17px */
+  --type-small: 0.875rem; /* 14px */
+  --type-eyebrow: 0.75rem; /* 12px */
+  --type-mono: 0.875rem; /* 14px */
+
+  /* Spacing scale (see §3) */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 12px;
+  --s-4: 16px;
+  --s-5: 20px;
+  --s-6: 24px;
+  --s-8: 32px;
+  --s-10: 40px;
+  --s-12: 48px;
+  --s-16: 64px;
+  --s-20: 80px;
+  --s-24: 96px;
+  --s-32: 128px;
+
+  /* Layout */
+  --section-y: clamp(4rem, 3rem + 4vw, 6rem);
+  --container-px: clamp(1.25rem, 0.75rem + 2vw, 3rem);
+  --container-max: 1200px;
+  --container-wide: 1440px;
+
+  /* Radii (see §4) */
+  --r-xs: 4px;
+  --r-sm: 6px;
+  --r-md: 10px;
+  --r-lg: 14px;
+  --r-xl: 20px;
+  --r-pill: 9999px;
+
+  /* Shadows (see §5) */
+  --shadow-sm: 0 1px 2px rgba(7, 9, 15, 0.30);
+  --shadow-md: 0 6px 16px -4px rgba(7, 9, 15, 0.45),
+    0 2px 4px -2px rgba(7, 9, 15, 0.30);
+  --shadow-lg: 0 24px 48px -16px rgba(7, 9, 15, 0.55),
+    0 8px 16px -8px rgba(7, 9, 15, 0.30);
+  --glow-warm: 0 0 80px -16px rgba(255, 122, 26, 0.45);
+  --glow-cool: 0 0 80px -16px rgba(31, 77, 255, 0.45);
+
+  /* Motion (see §6) */
+  --dur-fast: 120ms;
+  --dur-base: 200ms;
+  --dur-slow: 360ms;
+  --dur-cinema: 720ms;
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --ease-cinematic: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
