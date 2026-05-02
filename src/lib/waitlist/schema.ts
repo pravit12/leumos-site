@@ -72,7 +72,14 @@ export type SignupSuccessResponse = {
   referralCount: number;
   shareUrl: string;
   alreadyOnList: boolean;
+  /** Short-lived signed payload consumed by `/api/og/rank` and the email template. */
+  rankToken: string;
+  /** Snapshot of the founding cap at sign-up time; held in the response so the
+      client can render `#{rank} of {total}` without a follow-up call. */
+  rankTotal: number;
 };
+
+export const FOUNDING_TOTAL = 1000;
 
 export type SignupErrorResponse = {
   ok: false;

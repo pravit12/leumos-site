@@ -46,6 +46,9 @@ export function WaitlistForm({ formId = "waitlist-form" }: { formId?: string }) 
     referralCode: string;
     shareUrl: string;
     alreadyOnList: boolean;
+    rankToken: string;
+    rankTotal: number;
+    isEditor: boolean;
   } | null>(null);
 
   useEffect(() => {
@@ -71,7 +74,10 @@ export function WaitlistForm({ formId = "waitlist-form" }: { formId?: string }) 
         queuePosition={success.queuePosition}
         referralCode={success.referralCode}
         shareUrl={success.shareUrl}
+        rankToken={success.rankToken}
+        rankTotal={success.rankTotal}
         alreadyOnList={success.alreadyOnList}
+        isEditor={success.isEditor}
       />
     );
   }
@@ -127,6 +133,12 @@ export function WaitlistForm({ formId = "waitlist-form" }: { formId?: string }) 
         referralCode: json.referralCode,
         shareUrl: json.shareUrl,
         alreadyOnList: json.alreadyOnList,
+        rankToken: json.rankToken,
+        rankTotal: json.rankTotal,
+        // LEU-40 §1.E.3 carves out an "editor" share-text variant. The
+        // current role schema doesn't expose that role yet; default to
+        // the broad copy and let the editor-role rollout flip the bit.
+        isEditor: false,
       });
       setStatus("success");
       track(ANALYTICS_EVENTS.WAITLIST_SIGNUP_SUCCESS, {

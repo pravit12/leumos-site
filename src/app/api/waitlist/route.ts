@@ -2,9 +2,12 @@ import { NextRequest, NextResponse } from "next/server";
 import { ZodError } from "zod";
 import {
   signupInputSchema,
+  FOUNDING_TOTAL,
   type SignupErrorResponse,
   type SignupSuccessResponse,
 } from "@/lib/waitlist/schema";
+import { signRankToken } from "@/lib/og/token";
+import { seedFromReferralCode } from "@/lib/og/seed";
 import {
   getStorage,
   getStorageKind,
@@ -27,6 +30,20 @@ function clientIp(req: NextRequest): string {
 
 function fail(status: number, payload: SignupErrorResponse) {
   return NextResponse.json(payload, { status });
+}
+
+async function mintRankToken(args: {
+  referralCode: string;
+  rank: number;
+  name?: string;
+}): Promise<string> {
+  return signRankToken({
+    rank: args.rank,
+    total: FOUNDING_TOTAL,
+    referralCode: args.referralCode,
+    seedId: seedFromReferralCode(args.referralCode),
+    name: args.name,
+  });
 }
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
@@ -58,14 +75,18 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
   // Honeypot — silent success so bots don't learn anything.
   if (parsed.website && parsed.website.length > 0) {
+    const fakeCode = "LU-XXXXXX";
+    const rankToken = await mintRankToken({ referralCode: fakeCode, rank: 1 });
     return NextResponse.json(
       {
         ok: true,
         queuePosition: 1,
-        referralCode: "LU-XXXXXX",
+        referralCode: fakeCode,
         referralCount: 0,
-        shareUrl: `${getSiteUrl()}/?ref=LU-XXXXXX`,
+        shareUrl: `${getSiteUrl()}/?ref=${fakeCode}`,
         alreadyOnList: false,
+        rankToken,
+        rankTotal: FOUNDING_TOTAL,
       } satisfies SignupSuccessResponse,
       { status: 200 },
     );
@@ -87,6 +108,11 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   const existing = await storage.getByEmail(parsed.email);
   if (existing) {
     const queuePosition = await storage.computeQueuePosition(existing);
+    const rankToken = await mintRankToken({
+      referralCode: existing.referralCode,
+      rank: queuePosition,
+      name: existing.name,
+    });
     return NextResponse.json(
       {
         ok: true,
@@ -95,6 +121,8 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         referralCount: existing.referralCount,
         shareUrl: `${getSiteUrl()}/?ref=${existing.referralCode}`,
         alreadyOnList: true,
+        rankToken,
+        rankTotal: FOUNDING_TOTAL,
       } satisfies SignupSuccessResponse,
       { status: 200 },
     );
@@ -129,11 +157,16 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
   const queuePosition = await storage.computeQueuePosition(created);
   const enriched: SignupRecord = { ...created, queuePosition };
+  const rankToken = await mintRankToken({
+    referralCode: enriched.referralCode,
+    rank: queuePosition,
+    name: enriched.name,
+  });
 
   // Email and audience sync are fire-and-forget so a Resend hiccup does not
   // fail the sign-up. Failures are logged server-side.
   void Promise.all([
-    sendConfirmationEmail(enriched).then((result) => {
+    sendConfirmationEmail(enriched, { rankToken }).then((result) => {
       if (!result.delivered && result.attempted) {
         console.warn("[waitlist] confirmation send failed", {
           email: enriched.email,
@@ -161,6 +194,8 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       referralCount: 0,
       shareUrl: `${getSiteUrl()}/?ref=${enriched.referralCode}`,
       alreadyOnList: false,
+      rankToken,
+      rankTotal: FOUNDING_TOTAL,
     } satisfies SignupSuccessResponse,
     { status: 201 },
   );

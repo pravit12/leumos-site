@@ -1,6 +1,7 @@
 import { Resend } from "resend";
 import { siteConfig, getSiteUrl } from "@/lib/site";
 import type { SignupRecord } from "./storage";
+import { FOUNDING_TOTAL } from "./schema";
 
 const FROM_EMAIL =
   process.env.RESEND_FROM_EMAIL ?? "Leumos AI <hello@leumos.ai>";
@@ -20,8 +21,14 @@ export type ConfirmationSendResult = {
   id?: string;
 };
 
+export type ConfirmationSendOptions = {
+  /** Required when the rank-frame email template is in use. */
+  rankToken: string;
+};
+
 export async function sendConfirmationEmail(
   record: SignupRecord,
+  options: ConfirmationSendOptions,
 ): Promise<ConfirmationSendResult> {
   const resend = getResend();
   if (!resend) {
@@ -34,45 +41,72 @@ export async function sendConfirmationEmail(
   const siteUrl = getSiteUrl();
   const shareUrl = `${siteUrl}/?ref=${record.referralCode}`;
   const greeting = record.name ? `Hi ${record.name.split(/\s+/)[0]},` : "Hi,";
+  const ogPng = `${siteUrl}/api/og/rank?token=${encodeURIComponent(options.rankToken)}&size=og`;
 
   const text = [
     greeting,
     "",
-    `Thanks for joining the ${siteConfig.name} waitlist. You're in.`,
+    `Thanks for joining the ${siteConfig.name} waitlist.`,
     "",
-    `What's next: we're heads-down building, and we'll email you when your access opens. Expect at most one update from us a month — we hate inbox clutter as much as you do.`,
+    `You're #${record.queuePosition} of ${FOUNDING_TOTAL.toLocaleString()} on the founding list. Founding pricing locks when the ${FOUNDING_TOTAL.toLocaleString()}th sign-up confirms.`,
     "",
-    `Your queue position: #${record.queuePosition}`,
-    `Your referral code: ${record.referralCode}`,
-    `Share this link to move up the line — every confirmed sign-up lifts you ~10 spots:`,
-    shareUrl,
+    `Want to move up? Every editor who confirms from your link bumps your rank.`,
+    `Your link: ${shareUrl}`,
     "",
-    "If you can spare 15 seconds, just forward this email to one person who'd find Leumos useful. That's the single biggest favor you can do us right now.",
+    `(View this email in a browser to see your founding-rank card.)`,
     "",
     `— The ${siteConfig.name} team`,
   ].join("\n");
 
-  const html = `
-<!doctype html>
+  // Inline HTML — kept under ~5 KB so most clients render the table layout
+  // unchanged. The hero asset is the OG PNG generated at /api/og/rank, the
+  // same image the user sees on the success page and shares to X.
+  const html = `<!doctype html>
 <html lang="en">
-  <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: #161a25; max-width: 560px; margin: 0 auto; padding: 24px; line-height: 1.5;">
-    <p>${greeting}</p>
-    <p>Thanks for joining the <strong>${siteConfig.name}</strong> waitlist. You&apos;re in.</p>
-    <p>What&apos;s next: we&apos;re heads-down building, and we&apos;ll email you when your access opens. Expect at most one update a month — we hate inbox clutter as much as you do.</p>
-    <table role="presentation" style="border-collapse:collapse; width:100%; margin:24px 0; background:#fffaeb; border-radius:12px;">
-      <tr>
-        <td style="padding:20px;">
-          <p style="margin:0 0 4px; font-size:13px; letter-spacing:0.08em; text-transform:uppercase; color:#b75007;">Your spot</p>
-          <p style="margin:0; font-size:32px; font-weight:600;">#${record.queuePosition}</p>
-          <p style="margin:14px 0 4px; font-size:13px; letter-spacing:0.08em; text-transform:uppercase; color:#b75007;">Your referral code</p>
-          <p style="margin:0; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size:18px;">${record.referralCode}</p>
-        </td>
-      </tr>
-    </table>
-    <p>Share this link to move up the line — every confirmed sign-up lifts you ~10 spots:</p>
-    <p><a href="${shareUrl}" style="color:#b75007;">${shareUrl}</a></p>
-    <p>If you can spare 15 seconds, forward this email to one person who&apos;d find Leumos useful. That&apos;s the single biggest favor you can do us right now.</p>
-    <p>— The ${siteConfig.name} team</p>
+  <head>
+    <meta charset="utf-8" />
+    <title>You're #${record.queuePosition} on the ${siteConfig.shortName} founding list</title>
+  </head>
+  <body style="margin:0; padding:0; background:#0D1119; color:#F5F6F8; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;">
+    <div style="max-width:640px; margin:0 auto; padding:32px 24px; line-height:1.55;">
+      <p style="margin:0 0 16px; font-size:16px; color:#C9CFD9;">${greeting}</p>
+      <p style="margin:0 0 24px; font-size:16px; color:#F5F6F8;">
+        Thanks for joining the <strong>${siteConfig.name}</strong> waitlist.
+        You&apos;re <strong>#${record.queuePosition}</strong> of ${FOUNDING_TOTAL.toLocaleString()} on the founding list.
+      </p>
+
+      <a href="${shareUrl}" style="display:block; text-decoration:none; margin:0 0 24px;">
+        <img
+          src="${ogPng}"
+          alt="Cinematic frame: rank ${record.queuePosition} of ${FOUNDING_TOTAL.toLocaleString()} founding waitlist members."
+          width="592"
+          height="311"
+          style="display:block; width:100%; max-width:592px; height:auto; border-radius:14px; border:0; outline:0;"
+        />
+      </a>
+
+      <p style="margin:0 0 12px; font-size:13px; letter-spacing:0.18em; text-transform:uppercase; color:#FFA866;">
+        Move up the queue
+      </p>
+      <p style="margin:0 0 16px; font-size:16px; color:#F5F6F8;">
+        Every editor who confirms from your link bumps your rank. No quotas, no tiers.
+      </p>
+
+      <table role="presentation" style="border-collapse:collapse; width:100%; margin:0 0 24px; background:#161B26; border:1px solid rgba(255,255,255,0.08); border-radius:10px;">
+        <tr>
+          <td style="padding:16px 18px;">
+            <p style="margin:0 0 4px; font-size:12px; letter-spacing:0.18em; text-transform:uppercase; color:#97A0AF;">Your referral link</p>
+            <p style="margin:0; font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace; font-size:14px; color:#F5F6F8; word-break:break-all;">
+              <a href="${shareUrl}" style="color:#5FCDE0; text-decoration:none;">${shareUrl}</a>
+            </p>
+          </td>
+        </tr>
+      </table>
+
+      <p style="margin:24px 0 0; font-size:14px; color:#97A0AF;">
+        — The ${siteConfig.name} team
+      </p>
+    </div>
   </body>
 </html>`.trim();
 
@@ -80,7 +114,7 @@ export async function sendConfirmationEmail(
     const { data, error } = await resend.emails.send({
       from: FROM_EMAIL,
       to: [record.email],
-      subject: `You're on the ${siteConfig.name} waitlist (#${record.queuePosition})`,
+      subject: `You're #${record.queuePosition} of ${FOUNDING_TOTAL.toLocaleString()} on the ${siteConfig.shortName} founding list`,
       text,
       html,
       tags: [

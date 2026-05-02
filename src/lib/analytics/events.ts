@@ -9,6 +9,7 @@ export const ANALYTICS_EVENTS = {
   WAITLIST_SIGNUP_ERROR: "waitlist_signup_error",
   WAITLIST_REFERRAL_SHARE: "waitlist_referral_share",
   WAITLIST_REFERRAL_COPY: "waitlist_referral_copy",
+  WAITLIST_RANK_FRAME_VIEW: "waitlist_rank_frame_view",
   BLOG_READ: "blog_read",
 } as const;
 
